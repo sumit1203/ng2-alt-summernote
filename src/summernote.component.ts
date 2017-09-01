@@ -56,11 +56,11 @@ export class SummernoteComponent implements OnInit, OnDestroy, ControlValueAcces
 
     @Input() whitespaceEmpty = false;
 
-    private _empty;
+    private _empty: boolean;
 
     @Output() emptyChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    get empty() {
+    get empty(): boolean {
         return this._empty;
     }
     set empty(value: boolean) {
@@ -80,8 +80,8 @@ export class SummernoteComponent implements OnInit, OnDestroy, ControlValueAcces
     private onChange: (value: string) => void = () => { };
 
     constructor(private element: ElementRef) {
-
     }
+
     private _value: string;
 
     set value(value: string) {
@@ -91,15 +91,15 @@ export class SummernoteComponent implements OnInit, OnDestroy, ControlValueAcces
         return this._value;
     }
 
-    private refreshOptions() {
+    private refreshOptions(): void {
         $(this.element.nativeElement).find('.summernote').summernote(this.options);
         if (this.options.tooltip != undefined && !this.options.tooltip)
             (<any>$(this.element.nativeElement).find('.note-editor button.note-btn')).tooltip('destroy');
     }
 
-    private addCallbacks() {
+    private addCallbacks(): void {
         this.options.callbacks = {
-            onChange: (contents, $editable) => {
+            onChange: (contents: string, $editable: JQuery) => {
                 this.refreshEmpty();
                 this.onChange(contents);
             },
@@ -109,7 +109,7 @@ export class SummernoteComponent implements OnInit, OnDestroy, ControlValueAcces
         };
     }
 
-    private refreshEmpty() {
+    private refreshEmpty(): void {
         let summernote = $(this.element.nativeElement).find('.summernote');
         if (summernote == null)
             return;
@@ -118,29 +118,29 @@ export class SummernoteComponent implements OnInit, OnDestroy, ControlValueAcces
             this.empty = this.empty || summernote.summernote('code').replace(/(<\/?[^>]+>)|(&nbsp;)/g, "").trim() === '';
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         if (this.options == null) {
             this.options = {};
         }
         this.refreshEmpty();
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         $(this.element.nativeElement).find('.summernote').summernote('destroy');
     }
 
-    writeValue(code: string) {
+    writeValue(code: string): void {
         this.value = code;
 
         $(this.element.nativeElement).find('.summernote').summernote('code', code);
         this.refreshEmpty();
     }
 
-    registerOnChange(fn: any) {
+    registerOnChange(fn: any): void {
         this.onChange = fn;
     }
 
-    registerOnTouched(fn: any) {
+    registerOnTouched(fn: any): void {
         this.onTouched = fn;
     }
 }
